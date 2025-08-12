@@ -1,0 +1,19 @@
+{
+  "functions": {
+    "app/api/compile/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/blockchain/route.ts": {
+      "maxDuration": 10
+    },
+    "app/api/ai-assist/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/voting/route.ts": {
+      "maxDuration": 5
+    },
+    "app/api/generator/route.ts": {
+      "maxDuration": 30
+    }
+  }
+}
