@@ -1,87 +1,100 @@
-
-```markdown file="interpreter/README.md"
 # WebCOBOL Interpreter
 
-A modern, serverless-compatible COBOL interpreter written in TypeScript. Execute COBOL programs directly in web browsers, Node.js, and serverless environments without native compilation.
+A pure JavaScript/TypeScript COBOL interpreter designed for modern web and serverless environments.
 
-## 🚀 Features
+## Features
 
-- **Pure JavaScript/TypeScript**: No native dependencies required
-- **Serverless Ready**: Works on Vercel, AWS Lambda, Cloudflare Workers
-- **Real-time Execution**: Instant COBOL program execution
-- **Modern Integration**: HTTP, JSON, Database support
-- **Web Compatible**: Runs in browsers and Node.js
-- **Open Source**: MIT licensed
+- Pure JavaScript implementation (no native dependencies)
+- Serverless-compatible (Vercel, AWS Lambda, Cloudflare Workers)
+- COBOL-74/85 language support
+- Web browser compatibility
+- TypeScript definitions included
+- Comprehensive test suite
 
-## 📦 Installation
+## Installation
 
 \`\`\`bash
 npm install webcobol-interpreter
 \`\`\`
 
-## 🔧 Quick Start
+## Quick Start
 
-\`\`\`typescript
-import { CobolInterpreter } from 'webcobol-interpreter';
+\`\`\`javascript
+const { CobolInterpreter } = require('webcobol-interpreter')
+
+const interpreter = new CobolInterpreter()
 
 const cobolCode = `
 IDENTIFICATION DIVISION.
-PROGRAM-ID. HELLO-WORLD.
+PROGRAM-ID. HELLO.
 
 DATA DIVISION.
 WORKING-STORAGE SECTION.
-01 WS-MESSAGE PIC X(20) VALUE "Hello, World!".
+01 WS-MESSAGE PIC X(20) VALUE "Hello, COBOL!".
 
 PROCEDURE DIVISION.
 DISPLAY WS-MESSAGE.
 STOP RUN.
-`;
+`
 
-const interpreter = new CobolInterpreter();
-const result = interpreter.execute(cobolCode);
-console.log(result.output); // "Hello, World!"
+const result = interpreter.interpret(cobolCode)
+console.log(result.output) // "Hello, COBOL!"
 \`\`\`
 
-## 🏗️ Architecture
+## Supported COBOL Features
 
-The interpreter consists of four main components:
+### Data Types
+- PIC X (alphanumeric)
+- PIC 9 (numeric)
+- PIC V (decimal point)
+- VALUE clauses
+- SPACES and ZEROS
 
-1. **Tokenizer**: Converts COBOL source into tokens
-2. **Parser**: Builds Abstract Syntax Tree (AST)
-3. **Runtime**: Executes the parsed program
-4. **Memory Manager**: Handles COBOL data types and storage
+### Statements
+- DISPLAY
+- MOVE
+- ADD
+- SUBTRACT
+- PERFORM
+- STOP RUN
 
-## 📚 Language Support
+### Structure
+- IDENTIFICATION DIVISION
+- DATA DIVISION
+- WORKING-STORAGE SECTION
+- PROCEDURE DIVISION
+- Paragraph procedures
 
-### Supported COBOL Features
+## API Reference
 
-#### Data Division
-- ✅ Working-Storage Section
-- ✅ PIC clauses (X, 9, A, S, V)
-- ✅ VALUE clauses
-- ✅ OCCURS clauses
-- ✅ REDEFINES clauses
-- ⏳ File Section (partial)
-- ⏳ Linkage Section
+### CobolInterpreter
 
-#### Procedure Division
-- ✅ DISPLAY statement
-- ✅ MOVE statement
-- ✅ ADD, SUBTRACT, MULTIPLY, DIVIDE
-- ✅ IF-THEN-ELSE
-- ✅ PERFORM loops
-- ✅ ACCEPT statement
-- ⏳ STRING/UNSTRING operations
-- ⏳ CALL statement
+\`\`\`typescript
+class CobolInterpreter {
+  interpret(cobolCode: string): ExecutionResult
+}
 
-### Web Extensions
+interface ExecutionResult {
+  success: boolean
+  output: string
+  error?: string
+}
+\`\`\`
 
-```cobol
-* HTTP Operations
-HTTP-GET "https://api.example.com" GIVING WS-RESPONSE.
+## Examples
 
-* JSON Handling
-JSON-PARSE WS-JSON-STRING INTO WS-DATA-STRUCTURE.
+See the `/examples` directory for more comprehensive examples.
 
-* Database Operations
-SQL-EXEC "SELECT * FROM users" GIVING WS-RESULT.
+## Testing
+
+\`\`\`bash
+npm test
+\`\`\`
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## License
+
+MIT License - see [LICENSE](LICENSE) file for details.

@@ -1,0 +1,64 @@
+{
+  "name": "webcobol-interpreter",
+  "version": "1.0.0",
+  "description": "A pure JavaScript/TypeScript COBOL interpreter for modern web and serverless environments",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "benchmark": "node benchmarks/performance.js",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "prepublishOnly": "npm run build",
+    "docs": "typedoc src/index.ts"
+  },
+  "keywords": [
+    "cobol",
+    "interpreter",
+    "compiler",
+    "legacy",
+    "modernization",
+    "serverless",
+    "javascript",
+    "typescript",
+    "blockchain",
+    "webcobol"
+  ],
+  "author": "WebCOBOL Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webcobol/interpreter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/webcobol/interpreter/issues"
+  },
+  "homepage": "https://webcobol-interpreter.dev",
+  "files": ["dist", "README.md", "LICENSE", "WHITEPAPER.md"],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.8",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.55.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.1.0",
+    "ts-jest": "^29.1.0",
+    "typedoc": "^0.25.0",
+    "typescript": "^5.0.2"
+  },
+  "dependencies": {},
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "collectCoverageFrom": ["src/**/*.ts", "!src/**/*.d.ts"]
+  }
+}
