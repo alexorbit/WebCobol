@@ -1,64 +1,101 @@
-import { Suspense } from "react"
-import { WebCOBOLInterface } from "@/components/webcobol-interface"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+"use client"
 
-export default function Home() {
+import { useState } from "react"
+import dynamic from "next/dynamic"
+
+const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false })
+
+const defaultCode = `IDENTIFICATION DIVISION.
+PROGRAM-ID. HELLO-WORLD.
+
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 WS-MESSAGE PIC X(20) VALUE "Hello, COBOL World!".
+01 WS-NUMBER PIC 9(3) VALUE 123.
+
+PROCEDURE DIVISION.
+DISPLAY WS-MESSAGE.
+DISPLAY "Number: " WS-NUMBER.
+STOP RUN.`
+
+export default function InterpreterPage() {
+  const [code, setCode] = useState(defaultCode)
+  const [output, setOutput] = useState("")
+  const [isRunning, setIsRunning] = useState(false)
+
+  const runCode = async () => {
+    setIsRunning(true)
+    try {
+      const response = await fetch("/api/interpret", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setOutput(result.output || "Program executed successfully (no output)")
+      } else {
+        setOutput(`Error: ${result.error}`)
+      }
+    } catch (error) {
+      setOutput(`Network error: ${error}`)
+    }
+    setIsRunning(false)
+  }
+
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">WebCOBOL-Blockchain</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
-            Uma linguagem baseada em COBOL para desenvolvimento web e blockchain. Combine a robustez do COBOL com
-            tecnologias modernas de blockchain.
-          </p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 px-6 py-4">
+        <h1 className="text-2xl font-bold text-gray-800">WebCOBOL Interpreter</h1>
+        <p className="text-gray-600">Online COBOL interpreter and IDE</p>
+      </header>
 
-          <div className="flex gap-4 justify-center mb-8">
-            <Link href="/interpreter">
-              <Button
-                size="lg"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                🔧 COBOL Interpreter
-              </Button>
-            </Link>
-            <Link href="/ide">
-              <Button
-                size="lg"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                💻 WebCOBOL IDE
-              </Button>
-            </Link>
-            <Link href="/generator">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
-                🚀 Gerador de Blockchain
-              </Button>
-            </Link>
-            <Link href="/config">
-              <Button variant="outline" size="lg" className="text-gray-600 border-gray-300 bg-transparent">
-                ⚙️ Configurações
-              </Button>
-            </Link>
-          </div>
-
-          {/* <CHANGE> Adicionado botão Deploy with Vercel */}
-          <div className="mb-8">
-            <a
-              href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAKowaa%2FWCB-COBOL&env=DEEPSEEK_API_KEY&envDescription=DeepSeek%20API%20key%20for%20AI%20assistance&envLink=https%3A%2F%2Fplatform.deepseek.com"
-              target="_blank"
-              rel="noopener noreferrer"
+      {/* Main Content */}
+      <div className="flex h-[calc(100vh-80px)]">
+        {/* Editor Panel */}
+        <div className="flex-1 flex flex-col">
+          <div className="bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center">
+            <h2 className="font-semibold text-gray-700">COBOL Editor</h2>
+            <button
+              onClick={runCode}
+              disabled={isRunning}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
-              <img src="https://vercel.com/button" alt="Deploy with Vercel" className="inline-block" />
-            </a>
+              {isRunning ? "Running..." : "Run Code"}
+            </button>
+          </div>
+          <div className="flex-1">
+            <MonacoEditor
+              height="100%"
+              defaultLanguage="cobol"
+              value={code}
+              onChange={(value) => setCode(value || "")}
+              theme="vs-light"
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                lineNumbers: "on",
+                wordWrap: "on",
+              }}
+            />
           </div>
         </div>
 
-        <Suspense fallback={<div className="text-center text-gray-600">Carregando interface...</div>}>
-          <WebCOBOLInterface />
-        </Suspense>
+        {/* Output Panel */}
+        <div className="w-96 bg-white border-l border-gray-200 flex flex-col">
+          <div className="bg-gray-100 px-4 py-2 border-b border-gray-200">
+            <h2 className="font-semibold text-gray-700">Output</h2>
+          </div>
+          <div className="flex-1 p-4 overflow-auto">
+            <pre className="text-sm text-gray-800 whitespace-pre-wrap font-mono">
+              {output || 'Click "Run Code" to see output here...'}
+            </pre>
+          </div>
+        </div>
       </div>
-    </main>
+    </div>
   )
 }

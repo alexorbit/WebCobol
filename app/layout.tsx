@@ -1,34 +1,19 @@
 import type React from "react"
-import type { Metadata } from "next"
-import { Inter, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-jetbrains-mono",
-})
-
-export const metadata: Metadata = {
-  title: "WebCOBOL-Blockchain (WCB)",
-  description: "Uma linguagem baseada em COBOL para desenvolvimento web e blockchain",
-  generator: "WebCOBOL-Blockchain",
+export const metadata = {
+  title: "WebCOBOL Interpreter",
+  description: "Online COBOL interpreter and IDE",
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
-      <body className="font-sans">{children}</body>
+    <html lang="en">
+      <body className="bg-gray-50 text-gray-800">{children}</body>
     </html>
   )
 }
